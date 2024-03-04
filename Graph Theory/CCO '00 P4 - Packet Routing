@@ -1,1 +1,62 @@
+import java.util.*;
+import java.io.*;
 
+public class CCO_00_P4 {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		StringTokenizer st;
+
+		st = new StringTokenizer(br.readLine());
+		int nodes = Integer.parseInt(st.nextToken());
+		int wires = Integer.parseInt(st.nextToken());
+		int packets = Integer.parseInt(st.nextToken());
+
+		int[] step = new int[nodes];
+		Queue<Integer> queue = new LinkedList<>();
+		List<Integer>[] adj = new ArrayList[nodes];
+		int[][] time = new int[nodes][nodes];
+
+		for (int i = 0; i < nodes; i++) {
+			adj[i] = new ArrayList<>();
+		}
+
+		for (int i = 0; i < wires; i++) {
+			st = new StringTokenizer(br.readLine());
+			int src = Integer.parseInt(st.nextToken()) - 1;
+			int dest = Integer.parseInt(st.nextToken()) - 1;
+			int time1 = Integer.parseInt(st.nextToken());
+			adj[src].add(dest);
+			adj[dest].add(src);
+			time[src][dest] = time1;
+			time[dest][src] = time1;
+
+		}
+
+		for (int i = 0; i < packets; i++) {
+			st = new StringTokenizer(br.readLine());
+			int start = Integer.parseInt(st.nextToken()) - 1;
+			int end = Integer.parseInt(st.nextToken()) - 1;
+
+			queue.add(start);
+
+			while (!queue.isEmpty()) {
+				int cur = queue.poll();
+				for (int next : adj[cur]) {
+					if (step[next] == 0) {
+						queue.add(next);
+						step[next] = step[cur] + time[cur][next];
+					}
+				}
+			}
+
+			out.println(step[end]);
+			Arrays.fill(step, 0);
+		}
+		out.flush();
+
+	}
+
+}

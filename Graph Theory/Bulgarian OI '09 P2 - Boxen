@@ -1,1 +1,57 @@
+import java.util.*;
+import java.io.*;
 
+public class boxen {
+
+	public static void dfs(int cur, int f) {
+		visit[cur] = f;
+		for (int next : adj[cur]) {
+			if (visit[next] == 0) {
+				visit[next] = f;
+				dfs(next, f);
+			} else if (visit[next] != f) {
+				ans--;
+			}
+		}
+	}
+
+	static List<Integer>[] adj;
+	static int[] visit;
+	static int ans;
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		StringTokenizer st;
+
+		for (int test = 0; test < 2; test++) {
+			int n = Integer.parseInt(br.readLine());
+			adj = new ArrayList[n];
+			visit = new int[n];
+			ans = 0;
+
+			for (int i = 0; i < n; i++) {
+				adj[i] = new ArrayList<>();
+			}
+
+			for (int i = 0; i < n; i++) {
+				int src = Integer.parseInt(br.readLine()) - 1;
+				adj[src].add(i);
+			}
+
+			int count = 1;
+			for (int i = 0; i < n; i++) {
+				if (visit[i] == 0) {
+					ans++;
+					dfs(i, count);
+					count++;
+				}
+				
+			}
+			out.print(ans + " ");
+		}
+		out.flush();
+	}
+
+}

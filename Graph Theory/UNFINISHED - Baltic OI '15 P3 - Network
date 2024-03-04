@@ -1,1 +1,86 @@
+import java.util.*;
+import java.io.*;
 
+public class Baltic_OI_15_P3_Network {
+	static List<Integer>[] adj;
+	static Queue<Integer>[] child;
+	static int childcount = 0;
+	static HashSet<Integer> hash = new HashSet<>();
+	static List<Integer> past = new ArrayList<>();
+
+	static void dfs(int cur, int parent) {
+		if (adj[cur].size() == 1) {
+			child[parent].add(cur);
+			childcount++;
+			if (!hash.contains(parent)) {
+				past.add(parent);
+				hash.add(parent);
+			}
+		}
+		for (int next : adj[cur]) {
+			if (next != parent) {
+				dfs(next, cur);
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		StringTokenizer st;
+
+		int n = Integer.parseInt(br.readLine());
+		adj = new ArrayList[n + 1];
+		child = new LinkedList[n + 1];
+		for (int i = 1; i <= n; ++i) {
+			adj[i] = new ArrayList<>();
+			child[i] = new LinkedList<>();
+		}
+		for (int i = 0; i < n - 1; ++i) {
+			st = new StringTokenizer(br.readLine());
+			int u = Integer.parseInt(st.nextToken());
+			int v = Integer.parseInt(st.nextToken());
+			adj[u].add(v);
+			adj[v].add(u);
+		}
+		if (adj[1].size() == 1) {
+			dfs(adj[1].get(0), adj[1].get(0));
+		} else {
+			dfs(1, 1);
+		}
+		int pair = childcount / 2;
+		if (childcount % 2 != 0) {
+			pair++;
+		}
+		int[][] pairs = new int[pair][2];
+		if (childcount % 2 != 0) {
+			pairs[pair-1][1]=1;
+		}
+		int pointer = 0;
+		for (int i = 0; i < pair; i++) {
+			while (pairs[i][0] == 0) {
+				int par = past.get(pointer);
+				if (!child[par].isEmpty()) {
+					pairs[i][0] = child[par].poll();
+				} else {
+					pointer++;
+				}
+			}
+		}
+		for (int i = 0; i < pair; i++) {
+			while (pairs[i][1] == 0) {
+				int par = past.get(pointer);
+				if (!child[par].isEmpty()) {
+					pairs[i][1] = child[par].poll();
+				} else {
+					pointer++;
+				}
+			}
+		}
+		System.out.println(pair);
+		for (int[] arr: pairs) {
+			System.out.println(arr[0]+" "+arr[1]);
+		}
+
+	}
+}

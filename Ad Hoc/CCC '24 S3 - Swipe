@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> pi;
+
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int n;
+    cin>>n;
+    vector<int> a(n);
+    vector<int> b(n);
+    vector<pi> left;
+    vector<pi> right;
+    for (int i = 0; i <n; i++) {
+        cin>>a[i];
+    }
+    for (int i = 0; i <n; i++) {
+        cin>>b[i];
+    }
+    int pb = 0;
+    int counter = 0;
+    for (int i = 0; i <n; i++) {
+        while (b[pb]==a[i]) {
+            if (pb<i) {
+                left.push_back({pb, i});
+                counter++;
+            } else if (pb>i) {
+                right.push_back({i, pb});
+                counter++;
+            }
+            pb++;
+        }
+
+    }
+    if (pb<n) {
+        cout<<"NO";
+    } else {
+        cout<<"YES"<<endl;
+        cout<<counter<<endl;
+        for (auto [l,r]:left) {
+            cout<<"L"<<" "<<l<<" "<<r<<endl;
+        }
+        if (right.size()>0) {
+            for (int i =right.size()-1; i>=0; --i) {
+                cout<<"R"<<" "<<right[i].first<<" "<<right[i].second<<endl;
+            }
+        }
+    }
+}

@@ -1,1 +1,65 @@
+import java.util.*;
+import java.io.*;
+
+public class CCC_18_J5 {
+
+	public static void main(String[] args)throws IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		StringTokenizer st;
+		
+		int n = Integer.parseInt(br.readLine());
+		boolean[][] adj = new boolean[n][n];
+		Queue<Integer> queue = new LinkedList<>();
+		int[] step = new int[n];
+		
+        Arrays.fill(step, Integer.MAX_VALUE);
+        
+        HashSet<Integer> ending = new HashSet<Integer>();
+		
+		for (int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			int m = Integer.parseInt(st.nextToken());
+			if (m != 0) {
+				for (int j = 0; j < m; j++) {
+					int edge = Integer.parseInt(st.nextToken()) - 1;
+					adj[i][edge] = true;
+					
+				}
+			} else {
+				ending.add(i);
+			}
+		}
+		
+		step[0] = 0;
+		queue.add(0);
+		int endcount = Integer.MAX_VALUE;
+		
+		while (!queue.isEmpty()) {
+			int cur = queue.poll();
+			for (int i = 0; i < n; i++) {
+				if (adj[cur][i] && step[cur] + 1 < step[i]) {
+					queue.add(i);
+					step[i] = step[cur] + 1;
+					if (ending.contains(i) && step[i] < endcount) {
+						endcount = step[i];
+					}
+				}
+			}
+		}
+		
+		
+		Arrays.sort(step);
+		if (step[n-1] < Integer.MAX_VALUE) {
+			out.println("Y");
+		} else {
+			out.println("N");
+		}
+		
+		out.println(endcount + 1);
+		out.flush();
+	}
+
+}
 

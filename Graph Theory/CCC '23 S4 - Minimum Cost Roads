@@ -1,1 +1,92 @@
+import java.util.*;
+import java.io.*;
 
+public class CCC_23_S4 {
+	static int n;
+	static List<edge>[] adj;
+
+	static class edge implements Comparable<edge> {
+		int src;
+		int dest;
+		long weight;
+		long cost;
+
+		edge(int s, int d, long w, long c) {
+			src = s;
+			dest = d;
+			weight = w;
+			cost = c;
+		}
+
+		public int compareTo(edge other) {
+			if (this.weight == other.weight) {
+				return Long.compare(this.cost, other.cost);
+			} else {
+				return Long.compare(this.weight, other.weight);
+			}
+		}
+	}
+
+	static long dijkstra(int src, int dest) {
+		PriorityQueue<edge> pq = new PriorityQueue<>();
+		long[] dist = new long[n + 1];
+		Arrays.fill(dist, (long) 1e15);
+		boolean[] vis = new boolean[n + 1];
+		pq.add(new edge(src, src, 0, 0));
+		dist[src] = 0;
+		while (!pq.isEmpty()) {
+			edge cur = pq.poll();
+			if (vis[cur.dest]) {
+				continue;
+			}
+			vis[cur.dest] = true;
+			for (edge next : adj[cur.dest]) {
+				if (dist[cur.dest] + next.weight < dist[next.dest]) {
+					dist[next.dest] = dist[cur.dest] + next.weight;
+					pq.add(new edge(cur.dest, next.dest, dist[next.dest], 0));
+				}
+			}
+		}
+		return dist[dest];
+	}
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+
+		st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		long ans = 0;
+		adj = new ArrayList[n + 1];
+		for (int i = 1; i <= n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+
+		PriorityQueue<edge> edges = new PriorityQueue<>();
+
+		for (int i = 0; i < m; i++) {
+			st = new StringTokenizer(br.readLine());
+			int u = Integer.parseInt(st.nextToken());
+			int v = Integer.parseInt(st.nextToken());
+			int l = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
+			edges.add(new edge(u, v, l, c));
+		}
+
+		while (!edges.isEmpty()) {
+			edge cur = edges.poll();
+			long dist = dijkstra(cur.src, cur.dest);
+			if (cur.weight < dist) {
+				adj[cur.src].add(new edge(cur.src, cur.dest, cur.weight, cur.cost));
+				adj[cur.dest].add(new edge(cur.dest, cur.src, cur.weight, cur.cost));
+				ans += cur.cost;
+			}
+
+		}
+		System.out.println(ans);
+
+	}
+
+}

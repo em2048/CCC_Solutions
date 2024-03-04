@@ -1,1 +1,73 @@
+import java.util.*;
+import java.io.*;
 
+public class CCC_05_S4 {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		StringTokenizer st;
+
+		int l = Integer.parseInt(br.readLine());
+
+		for (int i = 0; i < l; i++) {
+			int n = Integer.parseInt(br.readLine());
+			HashMap<String, ArrayList<String>> adj = new HashMap<>();
+			Queue<String> queue = new LinkedList<>();
+			HashMap<String, Integer> step = new HashMap<>();
+			HashMap<String, Boolean> visited = new HashMap<>();
+
+			String[] order = new String[n];
+
+			for (int j = 0; j < n; j += 2) {
+				String input1 = br.readLine();
+				String input2 = br.readLine();
+
+				order[j] = input1;
+				order[j + 1] = input2;
+				adj.put(input1, new ArrayList<>());
+				adj.put(input2, new ArrayList<>());
+				step.put(input1, 0);
+				step.put(input2, 0);
+				visited.put(input1, false);
+				visited.put(input2, false);
+			}
+
+			for (int j = 0; j < n; j += 2) {
+				adj.get(order[j]).add(order[j + 1]);
+				adj.get(order[j + 1]).add(order[j]);
+			}
+
+			String home = order[n - 1];
+
+			queue.add(home);
+			visited.put(home, true);
+			int time = 0;
+
+			while (!queue.isEmpty()) {
+				String cur = queue.poll();
+
+				for (int j = 0; j < adj.get(cur).size(); j++) {
+					if (!visited.get(adj.get(cur).get(j))) {
+						queue.add(adj.get(cur).get(j));
+
+						step.put(adj.get(cur).get(j), step.get(cur) + 1);
+						visited.put(adj.get(cur).get(j), true);
+
+						if (step.get(adj.get(cur).get(j)) > time) {
+							time = step.get(adj.get(cur).get(j));
+						}
+
+					}
+
+				}
+			}
+
+			out.println(n * 10 - time * 20);
+
+		}
+		out.flush();
+	}
+
+}

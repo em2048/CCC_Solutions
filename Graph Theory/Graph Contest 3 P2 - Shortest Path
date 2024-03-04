@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> pi;
+const int MM = 1001;
+
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int n,m;
+    cin>>n>>m;
+    ll dist[n+1];
+    memset(dist, 0x3f3f3f3f, sizeof(dist));
+    vector<pi> adj[n+1];
+    for (int i = 0; i<m; ++i) {
+        int u,v,w;
+        cin>>u>>v>>w;
+        adj[u].push_back({v, w});
+    }
+    queue<int> q;
+    vector<bool> inQ(n+1);
+    q.push(1);
+    dist[1]=0;
+    while (!q.empty()) {
+        int cur=q.front();
+        q.pop();
+        inQ[cur]=false;
+        for (auto [v,w]:adj[cur]) {
+            if (dist[cur]+w<dist[v]) {
+                dist[v]=dist[cur]+w;
+                if (!inQ[v]) {
+                    inQ[v]=true;
+                    q.push(v);
+                }
+            }
+        }
+
+    }
+    cout<<dist[n];
+
+}

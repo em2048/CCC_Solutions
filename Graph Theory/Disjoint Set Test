@@ -1,0 +1,71 @@
+import java.util.*;
+import java.io.*;
+
+public class disjointsettest {
+	static int[] parent, rank;
+	static List<Integer> ans;
+
+	static int find(int x) {
+		if (parent[x] != x) {
+			parent[x] = find(parent[x]);
+		}
+		return parent[x];
+	}
+
+	static void union(int x, int y, int id) {
+		int xr = find(x); // find the rep
+		int yr = find(y);
+
+		if (xr == yr) {
+			return; // same set therefore is cyclic (uh oh stinky)
+		}
+
+		ans.add(id);
+
+		if (rank[xr] < rank[yr]) {
+			parent[xr] = yr;
+		} else if (rank[xr] > rank[yr]) {
+			parent[yr] = xr;
+		} else { // equal so just do whatever
+			parent[yr] = xr;
+			rank[xr]++;
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+
+		st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+
+		ans = new ArrayList<>();
+
+		parent = new int[n + 1];
+		rank = new int[n + 1];
+
+		for (int i = 0; i < n + 1; i++) {
+			parent[i] = i;
+			rank[i] = 0;
+		}
+
+		for (int i = 1; i <= m; i++) {
+			st = new StringTokenizer(br.readLine());
+			int src = Integer.parseInt(st.nextToken());
+			int dest = Integer.parseInt(st.nextToken());
+
+			union(src, dest, i);
+		}
+
+		if (ans.size() != n - 1) {
+			System.out.println("Disconnected Graph");
+		} else {
+			for (int i = 0; i < ans.size(); i++) {
+				System.out.println(ans.get(i));
+			}
+		}
+	}
+
+}

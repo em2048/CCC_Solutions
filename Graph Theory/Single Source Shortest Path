@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> pi;
+
+int main() {
+    int n, m;
+    cin>>n>>m;
+    vector<pi> adj[n+1];
+    int dist[n+1];
+    for (int i = 1; i <=m; ++i) {
+        int u,v,w;
+        cin>>u>>v>>w;
+        adj[u].push_back({v,w}); //node, dist
+        adj[v].push_back({u,w});
+    }
+    fill(dist, dist+n+1,2e9);
+    priority_queue<pi, vector<pi>, greater<pi>> pq;
+    dist[1]=0;
+    pq.push({0,1}); //dist, node
+    while (!pq.empty()) {
+        auto [weight, src]=pq.top();
+        pq.pop();
+        if (weight>dist[src]) continue;
+        for (auto [v, w]:adj[src]) {
+            if (weight+w<dist[v]) {
+                dist[v]=weight+w;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+    for (int i = 1; i <=n; ++i) {
+        int ans = dist[i]==2e9?-1:dist[i];
+        cout<<ans<<endl;
+    }
+
+
+}

@@ -1,0 +1,63 @@
+import java.util.*;
+import java.io.*;
+
+public class olympiads_hw {
+
+	static int[] parent;
+	static int[] rank;
+
+	static void union(int x, int y) {
+		int nx = find(x);
+		int ny = find(y);
+		if (nx != ny) {
+			if (rank[nx] > rank[ny]) {
+				rank[nx] += rank[ny];
+				parent[ny] = nx;
+			} else {
+				rank[ny] += rank[nx];
+				parent[nx] = ny;
+			}
+		}
+	}
+
+	static int find(int x) {
+		if (parent[x] != x) {
+			parent[x] = find(parent[x]);
+		}
+		return parent[x];
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		StringTokenizer st;
+
+		st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int q = Integer.parseInt(st.nextToken());
+
+		parent = new int[n + 1];
+		rank = new int[n + 1];
+		Arrays.fill(rank, 1);
+		for (int i = 1; i <= n; i++) {
+			parent[i] = i;
+		}
+
+		for (int i = 0; i < q; i++) {
+			st = new StringTokenizer(br.readLine());
+			char c = st.nextToken().charAt(0);
+			int x = Integer.parseInt(st.nextToken());
+			int y = Integer.parseInt(st.nextToken());
+
+			if (c == 'A') {
+				union(x, y);
+			} else {
+				if (find(x) == find(y)) {
+					System.out.println("Y");
+				} else {
+					System.out.println("N");
+				}
+			}
+		}
+	}
+}

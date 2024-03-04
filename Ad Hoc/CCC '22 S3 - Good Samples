@@ -1,0 +1,61 @@
+import java.util.*;
+import java.io.*;
+
+public class olympiads_hw {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
+		StringTokenizer st;
+
+		st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		long k = Long.parseLong(st.nextToken());
+
+		List<Integer> ans = new ArrayList<>();
+		if (k < n || k > (long) (1 + m) * m / 2 + (long) (n - m) * m) {
+			System.out.println(-1);
+			return;
+		}
+		Deque<Integer> dq = new LinkedList();
+
+		// start off with all 1
+		k -= n;
+		int last = 1;
+		ans.add(1);
+		dq.add(1);
+
+		while (k > 0) {
+			last++;
+			if (k >= dq.size()) {
+				if (last <= m) {
+					k -= dq.size();
+					dq.add(last);
+					ans.add(last);
+					
+				} else {
+					int tmp = dq.pollFirst();
+					k -= dq.size();
+					ans.add(tmp);
+					dq.add(tmp);
+				}
+			} else {
+				int idx = (int) (dq.size() - k);
+				List<Integer> temp = new ArrayList<>(dq);
+				last = temp.get(idx - 1);
+				ans.add(last);
+				k = 0;
+				
+			}
+		}
+		last = ans.get(ans.size() - 1);
+		while (ans.size() < n) {
+			ans.add(last);
+		}
+		for (int x : ans) {
+			System.out.print(x + " ");
+		}
+
+	}
+}
